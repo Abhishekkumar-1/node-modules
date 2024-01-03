@@ -1,46 +1,25 @@
 const express=require('express')
 const app=express()
 
-const {products}=require('./data')
+let {people}=require('./data')
 
-app.get('/author',(req,res)=>{
-    res.json([
-        {uid:'20BCS9801',name:'Abhishek kumar',age:19},
-        {uid:'NA',name:'NA',age:21}
-    ])
+app.use(express.static('./methods-public'))
+app.use(express.urlencoded({extended:false}))
+
+app.get('/api/people',(req,res)=>{
+    res.status(200).json({success:true,data:people})
 })
 
-app.get('/',(req,res)=>{
-    res.send('<h1>Home Page</h1><a href="/api/products">products</a>')
-})
-
-app.get('/api/products/allproducts',(req,res)=>{
-    const newProducts=products.map((product)=>{
-        const {id,name,image}=product
-        return {id,name,image}
-    })
-
-    res.json(newProducts)
-})
-
-app.get('/api/products/:productID',(req,res)=>{
-    // console.log(req.params)
-    const {productID}=req.params
-    if(isNaN(productID)){
-        return res.send('<h3>Product id is should be integer</h3>')
+app.post('/login',(req,res)=>{
+    const {name}=req.body
+    if(name){
+        return res.status(200).send(`Welcome ${name}`)
     }
-    const singleProduct=products.find((product)=>product.id===Number(productID))
-    
-    if(!singleProduct){
-        return res.status(404).send('<h3>Not found product</h3>')
-    }
-    
-    return res.json(singleProduct)
-    
+    res.status(401).send('Please Provide Credentials')
 })
 
 app.listen(5000,()=>{
-    console.log('Server is listening  on 5000...')
+    console.log('Server is not working on 5000...')
 })
 
-// 5:50
+//7:05
